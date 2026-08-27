@@ -5,6 +5,9 @@
 mkdir -p build
 cd build
 
+# Convert version to release tag format (e.g., 7.157.0 -> alpha_release-7-157-0)
+RELEASE_TAG="alpha_release-${PKG_VERSION//./-}"
+
 # Configure with CMake
 cmake -G "Unix Makefiles" \
   -DCMAKE_INSTALL_PREFIX=${PREFIX} \
@@ -12,10 +15,13 @@ cmake -G "Unix Makefiles" \
   -DBUILD_SHARED_LIBS=ON \
   -DENABLE_JAVA=OFF \
   -DENABLE_MOTIF=OFF \
+  -DENABLE_DOXYGEN=OFF \
   -DENABLE_LABVIEW=OFF \
   -DREADLINE_DIR=${PREFIX} \
-  -DLIBXML2_DIR=${PREFIX} \
-  -DCMAKE_INSTALL_PREFIX=${PREFIX} \
+  -DLIBXML2_LIBRARY=${PREFIX}/lib/libxml2.so \
+  -DLIBXML2_INCLUDE_DIR=${PREFIX}/include \
+  -DCMAKE_PREFIX_PATH=${PREFIX} \
+  -DRELEASE_TAG="${RELEASE_TAG}" \
   ..
 
 # Build and install C/C++ libraries
